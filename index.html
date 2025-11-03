@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Absence Reporting Form</title>
+    <style>
+        .class-section {
+            margin-bottom: 10px;
+        }
+        .substitute-section {
+            display: none;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Teacher Absence Reporting Form</h2>
+    <!-- <form id="absenceForm"> -->
+    <!-- <form id="absenceForm" method="POST" data-netlify="true"> -->
+    <form id="absenceForm" netlify>
+        <!-- Teacher's Name -->
+        <div class="form-group">
+            <label for="teacherName">Teacher's Name:</label>
+            <input type="text" id="teacherName" name="teacherName" required>
+        </div>
+
+        <!-- Date of Absence -->
+        <div class="form-group">
+            <label for="absenceDate">Date of Absence:</label>
+            <input type="date" id="absenceDate" name="absenceDate" required>
+        </div>
+
+        <!-- Classes Section -->
+        <div id="classesContainer">
+            <div class="class-section">
+                <label for="class1">Class 1:</label>
+                <input type="text" name="classes[]" placeholder="Class name">
+                <select name="absenceOptions[]" onchange="toggleSubstituteField(this)">
+                    <option value="cancel">Cancel</option>
+                    <option value="makeUp">Make Up</option>
+                    <option value="substitute">Substitute Teacher</option>
+                </select>
+                <div class="substitute-section">
+                    <label for="substitute1">Substitute Teacher Name:</label>
+                    <input type="text" name="substituteNames[]">
+                </div>
+            </div>
+        </div>
+
+        <!-- Add More Classes Button -->
+        <button type="button" onclick="addClass()">Add Another Class</button><br><br>
+
+        <!-- Submit Button -->
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
+
