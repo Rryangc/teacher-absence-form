@@ -1,59 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Absence Reporting Form</title>
-    <style>
-        .class-section {
-            margin-bottom: 10px;
-        }
-        .substitute-section {
-            display: none;
-            margin-top: 5px;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teacher Absence Reporting Form</title>
+  <style>
+    .class-section { margin-bottom: 10px; }
+    .substitute-section { display: none; margin-top: 5px; }
+  </style>
 </head>
 <body>
-    <h2>Teacher Absence Reporting Form</h2>
-    <!-- <form id="absenceForm"> -->
-    <!-- <form id="absenceForm" method="POST" data-netlify="true"> -->
-    <form id="absenceForm" netlify>
-        <!-- Teacher's Name -->
-        <div class="form-group">
-            <label for="teacherName">Teacher's Name:</label>
-            <input type="text" id="teacherName" name="teacherName" required>
+  <h2>Teacher Absence Reporting Form</h2>
+
+  <!-- Use data-netlify attribute for Netlify forms -->
+  <form id="absenceForm" name="absenceForm" method="POST" data-netlify="true">
+    <div class="form-group">
+      <label for="teacherName">Teacher's Name:</label>
+      <input type="text" id="teacherName" name="teacherName" required>
+    </div>
+
+    <div class="form-group">
+      <label for="absenceDate">Date of Absence:</label>
+      <input type="date" id="absenceDate" name="absenceDate" required>
+    </div>
+
+    <div id="classesContainer">
+      <!-- initial class block (no ids to avoid duplicates) -->
+      <div class="class-section">
+        <label>Class 1:</label>
+        <input type="text" name="classes[]" placeholder="Class name">
+        <select name="absenceOptions[]">
+          <option value="cancel">Cancel</option>
+          <option value="makeUp">Make Up</option>
+          <option value="substitute">Substitute Teacher</option>
+        </select>
+        <div class="substitute-section">
+          <label>Substitute Teacher Name:</label>
+          <input type="text" name="substituteNames[]">
         </div>
+      </div>
+    </div>
 
-        <!-- Date of Absence -->
-        <div class="form-group">
-            <label for="absenceDate">Date of Absence:</label>
-            <input type="date" id="absenceDate" name="absenceDate" required>
+    <button type="button" id="addClassBtn">Add Another Class</button><br><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    // Show/hide substitute block for a given select element.
+    function toggleSubstituteField(selectEl) {
+      // find .class-section ancestor
+      const classSection = selectEl.closest('.class-section');
+      if (!classSection) return;
+      const subBlock = classSection.querySelector('.substitute-section');
+      const subInput = subBlock ? subBlock.querySelector('input[name="substituteNames[]"]') : null;
+
+      if (selectEl.value === 'substitute') {
+        subBlock.style.display = 'block';
+        if (subInput) subInput.disabled = false;
+      } else {
+        subBlock.style.display = 'none';
+        if (subInput) {
+          subInput.value = '';      // optional: clear value when hidden
+          subInput.disabled = true; // disable so it's not submitted
+        }
+      }
+    }
+
+    // Add a new class-section and attach event listener to its select
+    function addClass() {
+      const container = document.getElementById('classesContainer');
+      const currentCount = container.querySelectorAll('.class-section').length;
+      const index = currentCount + 1;
+
+      const div = document.createElement('div');
+      div.className = 'class-section';
+      div.innerHTML = `
+        <label>Class ${index}:</label>
+        <input type="text" name="classes[]" placeholder="Class name">
+        <select name="absenceOptions[]">
+          <option value="cancel">Cancel</option>
+          <option value="makeUp">Make Up</option>
+          <option value="substitute">Substitute Teacher</option>
+        </select>
+        <div class="substitute-section">
+          <label>Substitute Teacher Name:</label>
+          <input type="text" name="substituteNames[]">
         </div>
+      `;
 
-        <!-- Classes Section -->
-        <div id="classesContainer">
-            <div class="class-section">
-                <label for="class1">Class 1:</label>
-                <input type="text" name="classes[]" placeholder="Class name">
-                <select name="absenceOptions[]" onchange="toggleSubstituteField(this)">
-                    <option value="cancel">Cancel</option>
-                    <option value="makeUp">Make Up</option>
-                    <option value="substitute">Substitute Teacher</option>
-                </select>
-                <div class="substitute-section">
-                    <label for="substitute1">Substitute Teacher Name:</label>
-                    <input type="text" name="substituteNames[]">
-                </div>
-            </div>
-        </div>
+      container.appendChild(div);
 
-        <!-- Add More Classes Button -->
-        <button type="button" onclick="addClass()">Add Another Class</button><br><br>
+      // Attach change listener to the new select
+      const sel = div.querySelector('select[name="absenceOptions[]"]');
+      sel.addEventListener('change', () => toggleSubstituteField(sel));
 
-        <!-- Submit Button -->
-        <button type="submit">Submit</button>
-    </form>
+      // Initialize substitute input to disabled because default is not 'substitute'
+      const subInput = div.querySelector('input[name="substituteNames[]"]');
+      if (subInput) subInput.disabled = true;
+    }
+
+    // Setup initial listeners on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', () => {
+      // Attach listener for existing selects
+      document.querySelectorAll('select[name="absenceOptions[]"]').forEach(sel => {
+        sel.addEventListener('change', () => toggleSubstituteField(sel));
+        // ensure substitute inputs start disabled unless select == 'substitute'
+        const classSection = sel.closest('.class-section');
+        const subInput = classSection ? classSection.querySelector('input[name="substituteNames[]"]') : null;
+        if (subInput) subInput.disabled = (sel.value !== 'substitute');
+        // run once to set correct visibility on load
+        toggleSubstituteField(sel);
+      });
+
+      // wire the "Add Another Class" button
+      document.getElementById('addClassBtn').addEventListener('click', addClass);
+    });
+  </script>
 </body>
 </html>
-
