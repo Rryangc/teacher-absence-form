@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Absence Reporting Form</title>
+    <style>
+        .class-section {
+            margin-bottom: 10px;
+        }
+        .substitute-section {
+            display: none;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Teacher Absence Reporting Form</h2>
+    <form id="absenceForm">
+        <!-- Teacher's Name -->
+        <div class="form-group">
+            <label for="teacherName">Teacher's Name:</label>
+            <input type="text" id="teacherName" name="teacherName" required>
+        </div>
+
+        <!-- Date of Absence -->
+        <div class="form-group">
+            <label for="absenceDate">Date of Absence:</label>
+            <input type="date" id="absenceDate" name="absenceDate" required>
+        </div>
+
+        <!-- Classes Section -->
+        <div id="classesContainer">
+            <div class="class-section">
+                <label for="class1">Class 1:</label>
+                <input type="text" name="classes[]" placeholder="Class name">
+                <select name="absenceOptions[]" onchange="toggleSubstituteField(this)">
+                    <option value="cancel">Cancel</option>
+                    <option value="makeUp">Make Up</option>
+                    <option value="substitute">Substitute Teacher</option>
+                </select>
+                <div class="substitute-section">
+                    <label for="substitute1">Substitute Teacher Name:</label>
+                    <input type="text" name="substituteNames[]">
+                </div>
+            </div>
+        </div>
+
+        <!-- Add More Classes Button -->
+        <button type="button" onclick="addClass()">Add Another Class</button><br><br>
+
+        <!-- Submit Button -->
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        let classCounter = 1;
+
+        // Function to add new class section
+        function addClass() {
+            classCounter++;
+            let classesContainer = document.getElementById('classesContainer');
+            let newClassSection = document.createElement('div');
+            newClassSection.classList.add('class-section');
+            newClassSection.innerHTML = `
+                <label for="class${classCounter}">Class ${classCounter}:</label>
+                <input type="text" name="classes[]" placeholder="Class name">
+                <select name="absenceOptions[]" onchange="toggleSubstituteField(this)">
+                    <option value="cancel">Cancel</option>
+                    <option value="makeUp">Make Up</option>
+                </select>
+                <div class="substitute-section">
+                    <label for="substitute${classCounter}">Substitute Teacher Name:</label>
+                    <input type="text" name="substituteNames[]">
+                </div>
+            `;
+            classesContainer.appendChild(newClassSection);
+        }
+
+        // Function to toggle the visibility of the substitute teacher field
+        function toggleSubstituteField(selectElement) {
+            const substituteSection = selectElement.closest('.class-section').querySelector('.substitute-section');
+            if (selectElement.value === 'substitute') {
+                substituteSection.style.display = 'block';
+            } else {
+                substituteSection.style.display = 'none';
+            }
+        }
+
+        // Form submission handler (for example, log the data)
+        document.getElementById('absenceForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                if (!data[key]) {
+                    data[key] = [];
+                }
+                data[key].push(value);
+            });
+
+            console.log("Form Data Submitted: ", data);
+        });
+    </script>
+</body>
+</html>
+
