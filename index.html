@@ -17,7 +17,7 @@
       margin-bottom: 10px; 
       border-radius: 8px;
     }
-    .substitute-section {
+    .substitute-section, .makeup-section {
       display: none;
       margin-top: 6px;
       padding-left: 10px;
@@ -27,7 +27,7 @@
       display: inline-block;
       margin-bottom: 4px;
     }
-    input, select, button {
+    input, select, button, textarea {
       padding: 6px;
       margin-top: 2px;
       width: 100%;
@@ -79,14 +79,14 @@
 
         <div class="makeup-section">
           <label>Makeup Date 补课日期:</label>
-          <input type="date" name="makeupDates[]" placeholder="Select makeup date">
+          <input type="date" name="makeupDates[]" placeholder="Select makeup date" disabled>
           <label>Makeup Details 细节 (online, different time...):</label>
-          <textarea name="makeupDetails[]" placeholder="Provide details for makeup class"></textarea>
+          <textarea name="makeupDetails[]" placeholder="Provide details for makeup class" disabled></textarea>
         </div>
         
         <div class="substitute-section">
           <label>Sub Teacher Name 代课教师:</label>
-          <input type="text" name="substituteNames[]" placeholder="Enter substitute teacher name">
+          <input type="text" name="substituteNames[]" placeholder="Enter substitute teacher name" disabled>
         </div>
       </div>
     </div>
@@ -96,19 +96,43 @@
   </form>
 
   <script>
-    // Toggle the visibility of the substitute name field
-    function toggleSubstituteField(selectEl) {
+    // Toggle visibility for substitute and makeup fields
+    function toggleFields(selectEl) {
       const classSection = selectEl.closest('.class-section');
       const subSection = classSection.querySelector('.substitute-section');
       const subInput = subSection.querySelector('input[name="substituteNames[]"]');
+      const makeupSection = classSection.querySelector('.makeup-section');
+      const makeupDate = makeupSection.querySelector('input[name="makeupDates[]"]');
+      const makeupDetail = makeupSection.querySelector('textarea[name="makeupDetails[]"]');
 
       if (selectEl.value === 'substitute') {
         subSection.style.display = 'block';
         subInput.disabled = false;
-      } else {
+
+        makeupSection.style.display = 'none';
+        makeupDate.value = '';
+        makeupDate.disabled = true;
+        makeupDetail.value = '';
+        makeupDetail.disabled = true;
+      } else if (selectEl.value === 'makeUp') {
+        makeupSection.style.display = 'block';
+        makeupDate.disabled = false;
+        makeupDetail.disabled = false;
+
         subSection.style.display = 'none';
         subInput.value = '';
         subInput.disabled = true;
+      } else {
+        // Cancel option: hide both
+        subSection.style.display = 'none';
+        subInput.value = '';
+        subInput.disabled = true;
+
+        makeupSection.style.display = 'none';
+        makeupDate.value = '';
+        makeupDate.disabled = true;
+        makeupDetail.value = '';
+        makeupDetail.disabled = true;
       }
     }
 
@@ -130,16 +154,16 @@
           <option value="substitute">Substitute Teacher 其他老师代课</option>
         </select>
 
-        <div class="makeup-section">
+        <div class="makeup-section" style="display:none;">
           <label>Makeup Date 补课日期:</label>
-          <input type="date" name="makeupDates[]" placeholder="Select makeup date">
+          <input type="date" name="makeupDates[]" placeholder="Select makeup date" disabled>
           <label>Makeup Details 细节 (online, different time...):</label>
-          <textarea name="makeupDetails[]" placeholder="Provide details for makeup class"></textarea>
+          <textarea name="makeupDetails[]" placeholder="Provide details for makeup class" disabled></textarea>
         </div>
         
-        <div class="substitute-section">
+        <div class="substitute-section" style="display:none;">
           <label>Sub Teacher Name 代课教师:</label>
-          <input type="text" name="substituteNames[]" placeholder="Enter substitute teacher name">
+          <input type="text" name="substituteNames[]" placeholder="Enter substitute teacher name" disabled>
         </div>
       `;
 
@@ -147,18 +171,17 @@
 
       // Attach event listener for the new select
       const newSelect = newDiv.querySelector('select[name="absenceOptions[]"]');
-      newSelect.addEventListener('change', () => toggleSubstituteField(newSelect));
+      newSelect.addEventListener('change', () => toggleFields(newSelect));
 
-      // Initialize substitute field as hidden
-      const subInput = newDiv.querySelector('input[name="substituteNames[]"]');
-      subInput.disabled = true;
+      // Initialize fields as hidden/disabled
+      toggleFields(newSelect);
     }
 
     // Initialize listeners on load
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('select[name="absenceOptions[]"]').forEach(sel => {
-        sel.addEventListener('change', () => toggleSubstituteField(sel));
-        toggleSubstituteField(sel); // ensure proper initial state
+        sel.addEventListener('change', () => toggleFields(sel));
+        toggleFields(sel); // ensure proper initial state
       });
 
       document.getElementById('addClassBtn').addEventListener('click', addClass);
@@ -166,5 +189,3 @@
   </script>
 </body>
 </html>
-
-
