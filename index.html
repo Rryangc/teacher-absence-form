@@ -113,7 +113,7 @@
       const subInput = subSection.querySelector('input[name="substituteNames[]"]');
       const makeupSection = classSection.querySelector('.makeup-section');
       const makeupDate = makeupSection.querySelector('input[name="makeupDates[]"]');
-      const makeupDetail = makeupSection.querySelector('textarea[name="makeupDetails[]"]');
+      const makeupDetail = makeupSection.querySelector('input[name="makeupDetails[]"]'); // Changed from textarea
 
       if (selectEl.value === 'substitute') {
         subSection.style.display = 'block';
@@ -168,7 +168,7 @@
           <label>Makeup Date 补课日期:</label>
           <input type="date" name="makeupDates[]" placeholder="Select makeup date" disabled>
           <label>Makeup Details 细节 (online, different time...):</label>
-          <textarea name="makeupDetails[]" placeholder="Provide details for makeup class" disabled></textarea>
+          <input name="makeupDetails[]" placeholder="Provide details for makeup class" disabled></input>
         </div>
         
         <div class="substitute-section" style="display:none;">
@@ -199,4 +199,3 @@
   </script>
 </body>
 </html>
-
