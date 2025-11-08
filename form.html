@@ -158,10 +158,55 @@
       }
     }
 
-    // Add a new class section dynamically
-    function addClass() {
+function addClass() {
       const container = document.getElementById('classesContainer');
       const index = container.querySelectorAll('.class-section').length + 1;
 
       const newDiv = document.createElement('div');
-      newDiv.className =
+      newDiv.className = 'class-section';
+      newDiv.innerHTML = `
+        <label>Class 课程 ${index}:</label>
+        <input type="text" name="classes[]" placeholder="Class name" required>
+
+        <label>Arrangement Plan 处理安排:</label>
+        <select name="absenceOptions[]">
+          <option value="cancel">Cancel 课程取消</option>
+          <option value="makeUp">Make Up 补课</option>
+          <option value="substitute">Substitute Teacher 其他老师代课</option>
+        </select>
+
+        <div class="makeup-section" style="display:none;">
+          <label>Makeup Date 补课日期:</label>
+          <input type="date" name="makeupDates[]" placeholder="Select makeup date" disabled>
+          <label>Makeup Details 细节 (online, different time...):</label>
+          <textarea name="makeupDetails[]" placeholder="Provide details for makeup class" disabled></textarea>
+        </div>
+        
+        <div class="substitute-section" style="display:none;">
+          <label>Sub Teacher Name 代课教师:</label>
+          <input type="text" name="substituteNames[]" placeholder="Enter substitute teacher name" disabled>
+        </div>
+      `;
+
+      container.appendChild(newDiv);
+
+      // Attach event listener for the new select
+      const newSelect = newDiv.querySelector('select[name="absenceOptions[]"]');
+      newSelect.addEventListener('change', () => toggleFields(newSelect));
+
+      // Initialize fields as hidden/disabled
+      toggleFields(newSelect);
+    }
+
+    // Initialize listeners on load
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('select[name="absenceOptions[]"]').forEach(sel => {
+        sel.addEventListener('change', () => toggleFields(sel));
+        toggleFields(sel); // ensure proper initial state
+      });
+
+      document.getElementById('addClassBtn').addEventListener('click', addClass);
+    });
+  </script>
+</body>
+</html>
