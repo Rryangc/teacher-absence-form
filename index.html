@@ -51,35 +51,40 @@
 
   <form id="absenceForm" name="absenceForm" method="POST" data-netlify="true">
     <div class="form-group">
-      <label for="teacherName">Teacher's Name:</label>
+      <label for="teacherName">Teacher's Name 教师姓名:</label>
       <input type="text" id="teacherName" name="teacherName" required>
     </div>
 
     <div class="form-group">
-      <label for="absenceDate">Date of Absence:</label>
+      <label for="absenceDate">Date of Absence 请假日期:</label>
       <input type="date" id="absenceDate" name="absenceDate" required>
     </div>
-
+    
+    <div class="form-group">
+      <label for="absenceReason">Absence Reason 请假原因:</label>
+      <textarea id="absenceReason" name="absenceReason" placeholder="Please provide the reason for absence" required></textarea>
+    </div>    
+    
     <div id="classesContainer">
       <div class="class-section">
-        <label>Class 1:</label>
+        <label>Class 课程 1:</label>
         <input type="text" name="classes[]" placeholder="Class name" required>
 
-        <label>Absence Option:</label>
+        <label>Arrangement Option 处理安排:</label>
         <select name="absenceOptions[]">
-          <option value="cancel">Cancel</option>
-          <option value="makeUp">Make Up</option>
-          <option value="substitute">Substitute Teacher</option>
+          <option value="cancel">Cancel 课程取消</option>
+          <option value="makeUp">Make Up 补课</option>
+          <option value="substitute">Substitute Teacher 其他老师代课</option>
         </select>
 
         <div class="substitute-section">
-          <label>Sub Teacher Name:</label>
+          <label>Sub Teacher Name 代课教师:</label>
           <input type="text" name="substituteNames[]" placeholder="Enter substitute teacher name">
         </div>
       </div>
     </div>
 
-    <button type="button" id="addClassBtn">Add Another Class</button><br><br>
+    <button type="button" id="addClassBtn">Add Another Class 加更多课</button><br><br>
     <button type="submit">Submit</button>
   </form>
 
@@ -147,3 +152,4 @@
   </script>
 </body>
 </html>
+
