@@ -46,8 +46,8 @@
     }
     .logo {
       display: block;
-      margin: 0 auto 16px auto;
-      max-width: 180px;
+      margin: 0 auto 8px auto;
+      max-width: 90px;
     }
   </style>
 </head>
@@ -103,6 +103,13 @@
     </div>
 
     <button type="button" id="addClassBtn">Add Another Class 下一门课</button><br><br>
+    
+    <!-- Added Note input field before submit button -->
+    <div class="form-group">
+      <label for="additionalNote">Additional Note 备注:</label>
+      <textarea id="additionalNote" name="additionalNote" rows="3" placeholder="Add any comments or notes here"></textarea>
+    </div>
+
     <button type="submit">Submit 提交</button>
   </form>
 
@@ -200,7 +207,3 @@
   </script>
 </body>
 </html>
-
-
-
-
