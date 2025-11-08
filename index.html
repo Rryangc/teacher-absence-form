@@ -81,7 +81,7 @@
         <input type="text" name="classes[]" placeholder="Class name" required>
 
         <label>Arrangement Plan 处理安排:</label>
-        <select name="absenceOptions[]">
+        <select name="absenceOptions[]" required>
           <option value="cancel">Cancel 课程取消</option>
           <option value="makeUp">Make Up 补课</option>
           <option value="substitute">Substitute Teacher 其他老师代课</option>
@@ -91,7 +91,7 @@
           <label>Makeup Date 补课日期:</label>
           <input type="date" name="makeupDates[]" placeholder="Select makeup date" disabled>
           <label>Makeup Details 细节 (online, different time...):</label>
-          <input name="makeupDetails[]" placeholder="Provide details for makeup class" disabled></input>
+          <input type="text" name="makeupDetails[]" placeholder="Provide details for makeup class" disabled></input>
         </div>
         
         <div class="substitute-section">
@@ -168,7 +168,7 @@
           <label>Makeup Date 补课日期:</label>
           <input type="date" name="makeupDates[]" placeholder="Select makeup date" disabled>
           <label>Makeup Details 细节 (online, different time...):</label>
-          <input name="makeupDetails[]" placeholder="Provide details for makeup class" disabled></input>
+          <input type="text" name="makeupDetails[]" placeholder="Provide details for makeup class" disabled></input>
         </div>
         
         <div class="substitute-section" style="display:none;">
@@ -199,3 +199,4 @@
   </script>
 </body>
 </html>
+
