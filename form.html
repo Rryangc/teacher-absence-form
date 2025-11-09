@@ -122,10 +122,10 @@
     function toggleFields(selectEl) {
       const classSection = selectEl.closest('.class-section');
       const subSection = classSection.querySelector('.substitute-section');
-      const subInput = subSection.querySelector('input[name="substituteNames[]"]');
+      const subInput = subSection.querySelector('input[name="entry.1499217619_sub"]');
       const makeupSection = classSection.querySelector('.makeup-section');
-      const makeupDate = makeupSection.querySelector('input[name="makeupDates[]"]');
-      const makeupDetail = makeupSection.querySelector('input[name="makeupDetails[]"]'); // Changed from textarea
+      const makeupDate = makeupSection.querySelector('input[name="entry.1499217619_date"]');
+      const makeupDetail = makeupSection.querySelector('input[name="entry.1499217619_details"]'); // Changed from textarea
 
       if (selectEl.value === 'substitute') {
         subSection.style.display = 'block';
