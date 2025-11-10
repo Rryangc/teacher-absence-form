@@ -55,7 +55,7 @@
   <img src="0.jpg" alt="Xilin Northwest Chinese School Logo" class="logo">
   <h2>Teacher Absence Reporting Form 教师请假申请</h2>
 
-  <form action="https://docs.google.com/forms/d/e/1FAIpQLSeO_SfaykA3sor94Jda_65gTlZ866_08iyKW1q6v7jsw5ZjlA/formResponse" method="POST" target="_blank">
+  <form id="absenceForm" action="https://docs.google.com/forms/d/e/1FAIpQLSeO_SfaykA3sor94Jda_65gTlZ866_08iyKW1q6v7jsw5ZjlA/formResponse" method="POST" target="_blank">
     <div class="form-group">
       <label for="teacherName">Teacher's Name 教师姓名:</label>
       <input type="text" id="teacherName" name="entry.877279940" required>
@@ -78,7 +78,7 @@
 
     <div class="form-group">
       <br>
-      <label>Plan for each class affected 填写受影响每一门课的计划:</label>
+      <label>Plan for each class affected 填写受影响每一门课的计划 (最多 5 门课):</label>
     </div>
     
     <div id="classesContainer">
@@ -95,7 +95,7 @@
 
         <div class="makeup-section">
           <label>Makeup Date 补课日期:</label>
-          <input type="date" name="makeupDates[]" placeholder="Select makeup date" disabled>
+          <input type="date" name="makeupDates[]" disabled>
           <label>Makeup Details 细节 (online, different time...):</label>
           <input type="text" name="makeupDetails[]" placeholder="Provide details for makeup class" disabled>
         </div>
@@ -114,6 +114,13 @@
       <textarea id="additionalNote" name="entry.1802080225" rows="3" placeholder="Add any comments or notes here"></textarea>
     </div>
 
+    <!-- Hidden Google Form entries for 5 classes -->
+    <input type="hidden" name="entry.1499217619" id="entry_1">
+    <input type="hidden" name="entry.389089946" id="entry_2">
+    <input type="hidden" name="entry.1091424194" id="entry_3">
+    <input type="hidden" name="entry.1776332206" id="entry_4">
+    <input type="hidden" name="entry.2031923226" id="entry_5">
+
     <button type="submit">Submit 提交</button>
   </form>
 
@@ -124,7 +131,7 @@
       const subInput = subSection.querySelector('input');
       const makeupSection = classSection.querySelector('.makeup-section');
       const makeupDate = makeupSection.querySelector('input[type="date"]');
-      const makeupDetail = makeupSection.querySelector('input[type="text"], textarea');
+      const makeupDetail = makeupSection.querySelector('input[type="text"]');
 
       if (selectEl.value === 'substitute') {
         subSection.style.display = 'block';
@@ -158,8 +165,12 @@
 
     function addClass() {
       const container = document.getElementById('classesContainer');
-      const index = container.querySelectorAll('.class-section').length + 1;
-
+      const count = container.querySelectorAll('.class-section').length;
+      if (count >= 5) {
+        alert("You can only add up to 5 classes (最多 5 门课).");
+        return;
+      }
+      const index = count + 1;
       const newDiv = document.createElement('div');
       newDiv.className = 'class-section';
       newDiv.innerHTML = `
@@ -185,7 +196,6 @@
           <input type="text" name="substituteNames[]" placeholder="Enter substitute teacher name" disabled>
         </div>
       `;
-
       container.appendChild(newDiv);
 
       const newSelect = newDiv.querySelector('select[name="absenceOptions[]"]');
@@ -199,6 +209,27 @@
       });
 
       document.getElementById('addClassBtn').addEventListener('click', addClass);
+
+      // Before form submit, combine class info into hidden fields
+      document.getElementById('absenceForm').addEventListener('submit', (e) => {
+        const classes = document.querySelectorAll('.class-section');
+        for (let i = 0; i < 5; i++) {
+          const hiddenInput = document.getElementById(`entry_${i + 1}`);
+          if (i < classes.length) {
+            const cls = classes[i];
+            const name = cls.querySelector('input[name="classes[]"]').value.trim();
+            const plan = cls.querySelector('select[name="absenceOptions[]"]').value;
+            const makeupDate = cls.querySelector('input[name="makeupDates[]"]').value || '';
+            const makeupDetails = cls.querySelector('input[name="makeupDetails[]"]').value || '';
+            const subName = cls.querySelector('input[name="substituteNames[]"]').value || '';
+
+            // Combine into one string per class
+            hiddenInput.value = `${name}, ${plan}, ${makeupDate}, ${makeupDetails}, ${subName}`;
+          } else {
+            hiddenInput.value = "";
+          }
+        }
+      });
     });
   </script>
 </body>
